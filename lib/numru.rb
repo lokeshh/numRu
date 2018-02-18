@@ -12,6 +12,7 @@ RubyPython.start
 
 class NumRu
   @@np = RubyPython.import 'numpy'
+  @@blt = RubyPython::PyMainClass.send(:new)
   
   attr_accessor :np_obj
   
@@ -19,8 +20,18 @@ class NumRu
     @np_obj = np_obj
   end
 
-  def self.hi
-    "I'm am numru"
+  def [](*args)
+    args.map! do |i|
+      case i
+      when Range
+        @@blt.slice(i.begin, i.end)
+      else
+        [i]
+      end
+    end
+    args = args.map { |i| "ObjectSpace._id2ref(#{i.object_id})"}.join ','
+    # p "@np_obj.__getitem__([#{args.join ','}])"
+    NumRu.new eval("@np_obj.__getitem__([#{args}])")
   end
   
   def self.arg_to_s arg

@@ -1,15 +1,8 @@
-GIT
-  remote: https://github.com/halostatue/rubypython.git
-  revision: 48d97d424ef54ff39c7c37c0908d82c66de9350a
-  specs:
-    rubypython (0.6.4)
-      blankslate (>= 2.1.2.3)
-      ffi (~> 1.0.7)
-
 PATH
   remote: .
   specs:
-    NumRu (0.1.0)
+    NumRu (0.1.1)
+      rubypython
 
 GEM
   remote: https://rubygems.org/
@@ -36,6 +29,9 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
+    rubypython (0.6.4)
+      blankslate (>= 2.1.2.3)
+      ffi (~> 1.0.7)
 
 PLATFORMS
   ruby
@@ -43,10 +39,9 @@ PLATFORMS
 DEPENDENCIES
   NumRu!
   bundler (~> 1.16)
-  pry
+  pry (~> 0.11)
   rake (~> 10.0)
   rspec (~> 3.0)
-  rubypython!
 
 BUNDLED WITH
    1.16.1

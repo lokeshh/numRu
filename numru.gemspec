@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "numru/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "NumRu"
+  spec.name          = "numru"
   spec.version       = Numru::VERSION
   spec.authors       = ["lokeshh"]
   spec.email         = ["lokeshhsharma@gmail.com"]

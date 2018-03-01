@@ -63,7 +63,7 @@ class NumRu
     when NumRu
       obj.np_obj
     when Range
-      @@blt.range(obj.begin, obj.end)
+      @@blt.range(obj.begin, obj.end+1)
     else
       obj
     end

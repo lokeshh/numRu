@@ -24,13 +24,90 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+1. Whatever works in NumPy works here. If there's something that doesn't work let me know in the issues.
+```rb
+require 'numru'
+nr = NumRu
 
-## Development
+> x = nr.array 0..10
+=> array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10])
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+> x = nr.arange(27).reshape 3, 3, 3
+=> array([[[ 0,  1,  2],
+        [ 3,  4,  5],
+        [ 6,  7,  8]],
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+       [[ 9, 10, 11],
+        [12, 13, 14],
+        [15, 16, 17]],
+
+       [[18, 19, 20],
+        [21, 22, 23],
+        [24, 25, 26]]])
+
+```
+2. Keyword arguments are not supported. For that use hash instead.
+```rb
+> x = nr.array [1, 2, 3], dtype: :complex
+=> array([1.+0.j, 2.+0.j, 3.+0.j])
+
+> x = nr.array [1, 2, 3], dtype: nr.int32
+=> array([1, 2, 3], dtype=int32)
+```
+3. Indexing is similar to numpy except it use Ruby Range instead of Python Slice
+```rb
+> x = nr.array(20.times.map { |i| i**2 }).reshape 4, 5
+=> array([[  0,   1,   4,   9,  16],
+       [ 25,  36,  49,  64,  81],
+       [100, 121, 144, 169, 196],
+       [225, 256, 289, 324, 361]])
+> x[0]
+=> array([[ 0,  1,  4,  9, 16]])
+> x[[0, 1]]
+=> array([[ 0,  1,  4,  9, 16],
+       [25, 36, 49, 64, 81]])
+> x[0..1]
+=> array([[ 0,  1,  4,  9, 16],
+       [25, 36, 49, 64, 81]])
+> x[0..-1, -1]
+=> array([ 16,  81, 196, 361])
+> x[0..-1, -2..-1]
+=> array([[  9,  16],
+       [ 64,  81],
+       [169, 196],
+       [324, 361]])
+
+```
+4. Slicing is supported too but it has to be wrapped inside quotes
+```rb
+> x = nr.arange(25).reshape(5, 5).T
+=> array([[ 0,  5, 10, 15, 20],
+       [ 1,  6, 11, 16, 21],
+       [ 2,  7, 12, 17, 22],
+       [ 3,  8, 13, 18, 23],
+       [ 4,  9, 14, 19, 24]])
+> x['::', '::-1']
+=> array([[20, 15, 10,  5,  0],
+       [21, 16, 11,  6,  1],
+       [22, 17, 12,  7,  2],
+       [23, 18, 13,  8,  3],
+       [24, 19, 14,  9,  4]])
+> x[':3', ':3']
+=> array([[ 0,  5, 10],
+       [ 1,  6, 11],
+       [ 2,  7, 12]])
+
+```
+
+## In development
+
+The motive is not just to build a wrapper for NumPy but to adapt it to Ruby.
+
+Rough plan
+
+1. Provide all numpy functionality
+2. Provide `map`, `each`, etc.
+3. TODO: Think and discuss how to rubify the API
 
 ## Contributing
 

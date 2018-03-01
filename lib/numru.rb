@@ -1,10 +1,4 @@
 require "numru/version"
-
-# module Numru
-#   # Your code goes here...
-# end
-
-
 require 'rubypython'
 
 RubyPython.start
@@ -21,13 +15,9 @@ class NumRu
   end
   
   def self.return_or_wrap obj
-    # if obj.respond_to? :class
-    #   obj
-    # elsif obj.__class__.__name__ == 'ndarray'
-      NumRu.new obj
-    # else
-    #   obj
-    # end
+    obj.rubify
+  rescue
+    NumRu.new obj
   end
 
   def [](*args)
@@ -38,12 +28,50 @@ class NumRu
         @@blt.slice(i.begin, last)
       when NumRu
         i.np_obj
+      when String
+        a, b, c = i.split(':').map { |x| x == '' ? nil : x.to_i }
+        @@blt.slice(a, b, c)
       else
         i
       end
     end
     obj = @np_obj.__send__('__getitem__', args)
     NumRu.return_or_wrap obj
+  end
+  
+  def []=(*args)
+    args.map! do |i|
+      case i
+      when Range
+        last = i.end == -1 ? nil : i.end + 1
+        @@blt.slice(i.begin, last)
+      when NumRu
+        i.np_obj
+      when String
+        a, b, c = i.split(':').map { |x| x == '' ? nil : x.to_i }
+        @@blt.slice(a, b, c)
+      else
+        i
+      end
+    end
+    obj = @np_obj.__send__('__setitem__', args[0..-2], args[-1])
+    NumRu.return_or_wrap obj
+  end
+  
+  def self.extract_np_obj obj
+    obj.respond_to?(:class) && obj.class == NumRu ? obj.np_obj : obj
+  end
+  
+  def ==(arg)
+    @np_obj.__send__('__eq__', NumRu.extract_np_obj(arg))
+  end
+  
+  def < arg
+    @np_obj.__send__('__lt__', NumRu.extract_np_obj(arg))
+  end
+  
+  def > arg
+    @np_obj.__send__('__gt__', NumRu.extract_np_obj(arg))
   end
   
   def self.arg_to_s arg
@@ -57,13 +85,13 @@ class NumRu
   end
   
   def method_missing(m, *args)
-    args.map! { |i| i.respond_to?(:class) && i.class == NumRu ? i.np_obj : i }
+    args.map! { |i| NumRu.extract_np_obj i }
     obj = @np_obj.__send__ "#{m}!", *args
     NumRu.return_or_wrap obj
   end  
   
   def self.method_missing(m, *args)
-    args.map! { |i| i.respond_to?(:class) && i.class == NumRu ? i.np_obj : i }
+    args.map! { |i| NumRu.extract_np_obj i }
     obj = @@np.__send__ "#{m}!", *args
     return_or_wrap obj
   end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    NumRu (0.1.1)
+    numru (0.1.3)
       rubypython
 
 GEM
@@ -37,8 +37,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  NumRu!
   bundler (~> 1.16)
+  numru!
   pry (~> 0.11)
   rake (~> 10.0)
   rspec (~> 3.0)

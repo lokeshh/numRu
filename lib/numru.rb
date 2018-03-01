@@ -70,15 +70,15 @@ class NumRu
   end
 
   def ==(arg)
-    @np_obj.__send__('__eq__', NumRu.extract_np_obj(arg))
+    @np_obj.__send__('__eq__', NumRu.preprocess_arg(arg))
   end
 
   def < arg
-    @np_obj.__send__('__lt__', NumRu.extract_np_obj(arg))
+    @np_obj.__send__('__lt__', NumRu.preprocess_arg(arg))
   end
 
   def > arg
-    @np_obj.__send__('__gt__', NumRu.extract_np_obj(arg))
+    @np_obj.__send__('__gt__', NumRu.preprocess_arg(arg))
   end
 
   def self.arg_to_s arg

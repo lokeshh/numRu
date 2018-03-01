@@ -20,7 +20,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install NumRu
+    $ gem install numru
 
 ## Usage
 

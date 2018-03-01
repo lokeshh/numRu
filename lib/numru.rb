@@ -58,8 +58,15 @@ class NumRu
     NumRu.return_or_wrap obj
   end
   
-  def self.extract_np_obj obj
-    obj.respond_to?(:class) && obj.class == NumRu ? obj.np_obj : obj
+  def self.preprocess_arg obj
+    case obj
+    when NumRu
+      obj.np_obj
+    when Range
+      @@blt.range(obj.begin, obj.end)
+    else
+      obj
+    end
   end
   
   def ==(arg)
@@ -85,13 +92,13 @@ class NumRu
   end
   
   def method_missing(m, *args)
-    args.map! { |i| NumRu.extract_np_obj i }
+    args.map! { |i| NumRu.preprocess_arg i }
     obj = @np_obj.__send__ "#{m}!", *args
     NumRu.return_or_wrap obj
   end  
   
   def self.method_missing(m, *args)
-    args.map! { |i| NumRu.extract_np_obj i }
+    args.map! { |i| NumRu.preprocess_arg i }
     obj = @@np.__send__ "#{m}!", *args
     return_or_wrap obj
   end

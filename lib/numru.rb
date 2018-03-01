@@ -19,19 +19,31 @@ class NumRu
   def initialize np_obj
     @np_obj = np_obj
   end
+  
+  def self.return_or_wrap obj
+    # if obj.respond_to? :class
+    #   obj
+    # elsif obj.__class__.__name__ == 'ndarray'
+      NumRu.new obj
+    # else
+    #   obj
+    # end
+  end
 
   def [](*args)
     args.map! do |i|
       case i
       when Range
-        @@blt.slice(i.begin, i.end)
+        last = i.end == -1 ? nil : i.end + 1
+        @@blt.slice(i.begin, last)
+      when NumRu
+        i.np_obj
       else
-        [i]
+        i
       end
     end
-    args = args.map { |i| "ObjectSpace._id2ref(#{i.object_id})"}.join ','
-    # p "@np_obj.__getitem__([#{args.join ','}])"
-    NumRu.new eval("@np_obj.__getitem__([#{args}])")
+    obj = @np_obj.__send__('__getitem__', args)
+    NumRu.return_or_wrap obj
   end
   
   def self.arg_to_s arg
@@ -45,24 +57,22 @@ class NumRu
   end
   
   def method_missing(m, *args)
-    # p m, args
-    args = args.map { |i| NumRu.arg_to_s i }.join ','
-    # p "@np_obj.#{m}(#{args})"
-    NumRu.new eval("@np_obj.#{m}(#{args})")
+    args.map! { |i| i.respond_to?(:class) && i.class == NumRu ? i.np_obj : i }
+    obj = @np_obj.__send__ "#{m}!", *args
+    NumRu.return_or_wrap obj
   end  
   
   def self.method_missing(m, *args)
-    # p m
-    args = args.map { |i| self.arg_to_s i }.join ','
-    # p "@@np.#{m}(#{args})"
-    NumRu.new eval("@@np.#{m}(#{args})")
+    args.map! { |i| i.respond_to?(:class) && i.class == NumRu ? i.np_obj : i }
+    obj = @@np.__send__ "#{m}!", *args
+    return_or_wrap obj
   end
   
   def to_s
-    @np_obj
+    @np_obj.__str__
   end
   
   def inspect
-    to_s
+    @np_obj.__repr__
   end
 end

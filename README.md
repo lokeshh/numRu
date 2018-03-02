@@ -98,6 +98,22 @@ nr = NumRu
        [ 2,  7, 12]])
 
 ```
+5. Operators work the way you expect
+```rb
+> x = nr.array 1..5
+=> array([1, 2, 3, 4, 5])
+> x > 3
+=> array([False, False, False,  True,  True])
+> x == 3
+=> array([False, False,  True, False, False])
+> x * 2
+=> array([ 2,  4,  6,  8, 10])
+> x * x
+=> array([ 1,  4,  9, 16, 25])
+> x % 3
+=> array([1, 2, 0, 1, 2])
+
+```
 
 ## In development
 

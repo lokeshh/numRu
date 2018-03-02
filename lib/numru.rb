@@ -69,17 +69,17 @@ class NumRu
     end
   end
 
-  def ==(arg)
-    @np_obj.__send__('__eq__', NumRu.preprocess_arg(arg))
-  end
-
-  def < arg
-    @np_obj.__send__('__lt__', NumRu.preprocess_arg(arg))
-  end
-
-  def > arg
-    @np_obj.__send__('__gt__', NumRu.preprocess_arg(arg))
-  end
+  # def ==(arg)
+  #   @np_obj.__send__('__eq__', NumRu.preprocess_arg(arg))
+  # end
+  #
+  # def < arg
+  #   @np_obj.__send__('__lt__', NumRu.preprocess_arg(arg))
+  # end
+  #
+  # def > arg
+  #   @np_obj.__send__('__gt__', NumRu.preprocess_arg(arg))
+  # end
 
   def self.arg_to_s arg
     case arg
@@ -93,13 +93,15 @@ class NumRu
 
   def method_missing(m, *args)
     args.map! { |i| NumRu.preprocess_arg i }
-    obj = @np_obj.__send__ "#{m}!", *args
+    m = "#{m}!" if args.any? { |i| i.respond_to?(:class) && i.class == Hash }
+    obj = @np_obj.__send__ m, *args
     NumRu.return_or_wrap obj
   end
 
   def self.method_missing(m, *args)
     args.map! { |i| NumRu.preprocess_arg i }
-    obj = @@np.__send__ "#{m}!", *args
+    m = "#{m}!" if args.any? { |i| i.respond_to?(:class) && i.class == Hash }
+    obj = @@np.__send__ m, *args
     return_or_wrap obj
   end
 

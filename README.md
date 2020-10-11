@@ -127,7 +127,10 @@ Rough plan
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/lokeshh/numru. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+* To report bugs please create an issue [here](https://github.com/lokeshh/numRu/issues)
+* If you have fixed a bug, then please create a PR [here](https://github.com/lokeshh/numRu/pulls). While creating a PR please follow [contributing guidelines](CONTRIBUTING.md)
+
+Note - This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
